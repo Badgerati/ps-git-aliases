@@ -2,7 +2,7 @@
 .SYNOPSIS
 Deletes local branches that conform to some regular expression
 #>
-param(
+param (
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]

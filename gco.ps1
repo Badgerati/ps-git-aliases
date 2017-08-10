@@ -2,11 +2,14 @@
 .SYNOPSIS
 Checkout to branch and update it, or create new branch from current
 #>
-param(
+param (
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]
     $Branch,
+
+    [string]
+    $Commit = $null,
 
     [switch]
     $Pull,
@@ -42,6 +45,20 @@ else
     {
         gpull
     }
+
+    # if a commit was passed, reset the branch to that commit
+    if (![string]::IsNullOrWhiteSpace($Commit))
+    {
+        Write-Host "Resetting branch to commit: $($Commit)" -ForegroundColor Cyan
+        git reset --hard $Commit
+    }
 }
 
-Write-Host "Current branch: $(gbc)" -ForegroundColor Cyan
+if (![string]::IsNullOrWhiteSpace($Commit))
+{
+    Write-Host "Current branch: $(gbc) at commit $($Commit)" -ForegroundColor Cyan
+}
+else
+{
+    Write-Host "Current branch: $(gbc)" -ForegroundColor Cyan
+}

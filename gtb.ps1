@@ -2,7 +2,7 @@
 .SYNOPSIS
 Creates a tag of a branch
 #>
-param(
+param (
     [Parameter(Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [string]
@@ -12,6 +12,9 @@ param(
     [ValidateNotNullOrEmpty()]
     [string]
     $Tag,
+
+    [string]
+    $Commit = $null,
 
     [switch]
     $Push
@@ -31,7 +34,7 @@ if ($tagExists -ne 0)
 }
 
 # checkout to branch
-gco $Branch -Pull
+gco -Branch $Branch -Commit $Commit -Pull
 
 # create tag
 Write-Host 'Creating tag of branch' -ForegroundColor Cyan
