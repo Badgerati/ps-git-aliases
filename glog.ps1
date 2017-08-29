@@ -19,17 +19,25 @@ $logs = ((git log -$Limit) -join "`n") -split 'commit '
 $results = @{}
 
 $Search | ForEach-Object {
-    $results[$_] = 0
+    $results[$_] = @()
 
     foreach ($log in $logs)
     {    
         if ($log -imatch $_)
         {
-            $results[$_]++
+            $results[$_] += (($log -split "`n")[0]).Substring(1, 7)
         }
     }
 }
 
 $Search | ForEach-Object {
-    Write-Host "$($_)`t-`t$($results[$_])" -ForegroundColor Cyan
+    $count = ($results[$_] | Measure-Object).Count
+    
+    $commit = [string]::Empty
+    if ($count -gt 0)
+    {
+        $commit = ($results[$_] -join ', ') -ireplace ':', ''
+    }
+    
+    Write-Host "$($_)`t-`t$($count)`t-`t$($commit)" -ForegroundColor Cyan
 }
